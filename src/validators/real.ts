@@ -1,4 +1,4 @@
-import { ValueValidator } from './base';
+import { ValueValidator, ValidationMode } from '../core';
 
 export const ExpectedReal = 'EXPECTED_REAL';
 
@@ -6,17 +6,17 @@ export const ExpectedReal = 'EXPECTED_REAL';
  * Require a real value.
  */
 export function real(): ValueValidator<number> {
-  return ({ value, field, options }) => {
-    const { parse, strict } = options || { parse: false, strict: false };
-
-    if ((parse || !strict) && typeof value === 'string') {
-      value = +value;
+  return ({ value, field, mode }) => {
+    if (mode === ValidationMode.String || mode === ValidationMode.Form) {
+      if (typeof value === 'string') {
+        value = +value;
+      }
     }
     if (isFinite(value)) {
-      return { value, errors: [] };
+      return { value, ok: true };
     }
     return {
-      value,
+      ok: false,
       errors: [
         {
           id: ExpectedReal,

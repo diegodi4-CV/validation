@@ -1,4 +1,4 @@
-import { ValueValidator } from './base';
+import { ValueValidator } from '../core';
 
 export const ExpectedValue = 'EXPECTED_VALUE';
 
@@ -8,10 +8,10 @@ export const ExpectedValue = 'EXPECTED_VALUE';
 export function is<T>(...values: T[]): ValueValidator<T> {
   return ({ value, field }) => {
     if (values.indexOf(<T>value) >= 0) {
-      return { value, errors: [] };
+      return { value, ok: true };
     }
     return {
-      value,
+      ok: false,
       errors: [
         {
           id: ExpectedValue,

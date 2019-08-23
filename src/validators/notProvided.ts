@@ -1,4 +1,4 @@
-import { ValueValidator } from './base';
+import { ValueValidator } from '../core';
 
 export const UnexpectedField = 'UNEXPECTED_FIELD';
 
@@ -8,14 +8,14 @@ export const UnexpectedField = 'UNEXPECTED_FIELD';
 export function notProvided(opts?: {
   strict?: boolean;
 }): ValueValidator<undefined> {
-  return ({ value, field, options }) => {
-    const { strict } = opts || { strict: false };
+  return ({ value, field }) => {
+    const { strict = false } = opts || {};
 
     if ((!strict && value == undefined) || value === undefined) {
-      return { value: undefined, errors: [] };
+      return { value: undefined, ok: true };
     }
     return {
-      value,
+      ok: false,
       errors: [
         {
           id: UnexpectedField,

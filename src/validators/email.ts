@@ -1,4 +1,4 @@
-import { ValueValidator } from './base';
+import { ValueValidator } from '../core';
 
 export const ExpectedEmail = 'EXPECTED_EMAIL';
 
@@ -9,11 +9,11 @@ export function email(): ValueValidator<string> {
   return ({ value, field }) => {
     if (typeof value === 'string') {
       if (/^[^@]+@[^@]+$/.test(value)) {
-        return { value, errors: [] };
+        return { value, ok: true };
       }
     }
     return {
-      value,
+      ok: false,
       errors: [
         {
           id: ExpectedEmail,

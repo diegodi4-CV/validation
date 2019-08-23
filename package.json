@@ -1,7 +1,7 @@
 {
   "name": "@fmtk/validation",
   "private": false,
-  "version": "2.1.6",
+  "version": "3.0.0",
   "description": "Easy validation",
   "main": "dist/index.js",
   "repository": "https://github.com/futurematik/validation",
@@ -11,6 +11,7 @@
     "build": "npm run clean && npm run lint && tsc",
     "bumpfeat": "npm version minor && npm publish",
     "bumpfix": "npm version patch && npm publish",
+    "bumpmajor": "npm version major && npm publish",
     "clean": "rm -rf dist/",
     "lint": "tslint --project .",
     "postversion": "git push --follow-tags",
@@ -19,12 +20,10 @@
   },
   "devDependencies": {
     "@types/node": "^10.10.1",
-    "@types/zxcvbn": "^4.4.0",
     "tslint": "^5.11.0",
     "typescript": "^3.0.3"
   },
   "dependencies": {
-    "moment": "^2.22.2",
-    "zxcvbn": "^4.4.2"
+    "date-fns": "^2.0.0"
   }
 }

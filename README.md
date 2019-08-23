@@ -7,7 +7,7 @@ Validates objects, optionally coercing values into other types.
 Validators and types are all exported from the root:
 
 ```js
-import { any, text } from "@fmtk/validation";
+import { any, text } from '@fmtk/validation';
 ```
 
 Validators are functions which return a function which actually does the validation.
@@ -16,7 +16,7 @@ Validators are functions which return a function which actually does the validat
 // require a string
 const validator = text();
 
-const result = validator({ value: "foo" });
+const result = validator({ value: 'foo' });
 ```
 
 Most likely, you'll want to validate whole objects:
@@ -25,24 +25,32 @@ Most likely, you'll want to validate whole objects:
 const personValidator = properties({
   name: text(),
   age: optional(integer()),
-  dateOfBirth: dateFormat("YYYY-MM-DD")
+  dateOfBirth: dateFormat('YYYY-MM-DD'),
 });
 
 personValidator({
-  value: { name: "Bob", age: "5", dateOfBirth: "2013-12-05" },
-  options: { parse: true }
+  value: { name: 'Bob', age: '5', dateOfBirth: '2013-12-05' },
+  mode: ValidationMode.String,
 });
 // ===> {
-//   value: {name: 'Bob', age: 5, dateOfBirth: new Date('2013-12-05T00:00:00.000')},
-//   errors: []
-// }
+//    value: {
+//      name: 'Bob',
+//      age: 5,
+//      dateOfBirth: new Date('2013-12-05T00:00:00.000')
+//    },
+//    ok: true
+//  }
 
-personValidator({ value: { name: "Bob" } });
+personValidator({ value: { name: 'Bob' } });
 // ===> {
-//   value: {name: 'Bob'},
-//   errors: [
-//     {id: 'EXPECTED_DATE_FORMAT', text: 'expected a date with format YYYY-MM-DD', field: 'dateOfBirth'}
-//   ]
+//    value: { name: 'Bob' },
+//    errors: [
+//      {
+//        id: 'EXPECTED_DATE_FORMAT',
+//        text: 'expected a date',
+//        field: 'dateOfBirth'
+//      }
+//    ]
 // }
 ```
 
@@ -57,26 +65,38 @@ that takes a `ValidationContext` as its only parameter, and returns a `Validatio
 
 Properties:
 
-| value | the value to validate |
+| field | description                                                                   |
+| ----- | ----------------------------------------------------------------------------- |
+| value | the value to validate                                                         |
 | field | the name of the field under validation (for `properties` or `modelValidator`) |
-| options | optional parameters for the validation |
+| mode  | the validation mode                                                           |
 
-### `ValidationOptions`
+### `ValidationMode`
 
-| parse | whether or not to parse input values, e.g. accept `'1'` for `integer()` |
-| strict | ...? |
+```typescript
+enum ValidationMode {
+  Strict = 'strict',
+  JSON = 'json',
+  Form = 'form',
+  String = 'string',
+}
+```
 
 ### `ValidationResult`
 
-| value | the value after validation - allows values to be coerced, e.g., `integer()` turns `'1'` into `1` |
-| errors | an array of `ValidationError` if there are any |
+| field  | description                                                                                      |
+| ------ | ------------------------------------------------------------------------------------------------ |
+| value  | the value after validation - allows values to be coerced, e.g., `integer()` turns `'1'` into `1` |
+| errors | an array of `ValidationError` if there are any                                                   |
 
 ### `ValidationError`
 
-| `id` | the error ID |
-| `text` | the error message |
+| field   | description                                   |
+| ------- | --------------------------------------------- |
+| `id`    | the error ID                                  |
+| `text`  | the error message                             |
 | `field` | the field the error relates to, if applicable |
-| `extra` | any extra info, if applicable |
+| `extra` | any extra info, if applicable                 |
 
 ### `any()`
 
@@ -88,7 +108,9 @@ Expect the value to be an array.
 
 **Params:**
 
-| elem | a validator to validate each element in the array |
+| field      | description                                        |
+| ---------- | -------------------------------------------------- |
+| elem       | a validator to validate each element in the array  |
 | arraySplit | the character to split a string on (default `','`) |
 
 If `ValidationOptions.parse` is `true`, the validator will first create an array from the input by splitting by `arraySplit`.
@@ -166,10 +188,6 @@ Validates an object, taking a hash which describes the fields. E.g.:
 ```js
 properties({
   name: text(),
-  age: optional(integer())
+  age: optional(integer()),
 });
 ```
-
-### `modelValidator(model: ModelDefinition<T>, ...extended: ((value: T) => Partial<ModelDefinition<T>>)[])`
-
-Like `properties` above, except it also accepts additional validators for the whole object.

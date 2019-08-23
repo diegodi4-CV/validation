@@ -1,4 +1,4 @@
-import { ValueValidator } from './base';
+import { ValueValidator } from '../core';
 
 /**
  * Make a value optional.
@@ -10,6 +10,6 @@ export function optional<T>(
     if (ctx.value != undefined && <any>ctx.value !== '' && validator) {
       return validator(<any>ctx);
     }
-    return { value: undefined, errors: [] };
+    return { value: undefined, ok: true };
   };
 }
