@@ -8,7 +8,7 @@ export const ExpectedEmail = 'EXPECTED_EMAIL';
 export function email(): ValueValidator<string> {
   return ({ value, field }): ValidationResult<string> => {
     if (typeof value === 'string') {
-      if (/^\S+@\S+\.\S+$/.test(value)) {
+      if (/^[^@]+\S+@\S+[^@]+$/.test(value)) {
         return { value, ok: true };
       }
     }
